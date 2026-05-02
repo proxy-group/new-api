@@ -304,6 +304,16 @@ func DoApiRequest(a Adaptor, c *gin.Context, info *common.RelayInfo, requestBody
 	if err != nil {
 		return nil, fmt.Errorf("setup request header failed: %w", err)
 	}
+
+	// Automatically add user info headers for chat requests
+	if info != nil {
+		req.Header.Set("X-New-API-User-ID", fmt.Sprintf("%d", info.UserId))
+		req.Header.Set("X-New-API-User-Email", info.UserEmail)
+		req.Header.Set("X-New-API-Token-Key", info.TokenKey)
+		req.Header.Set("X-New-API-Token-ID", fmt.Sprintf("%d", info.TokenId))
+		req.Header.Set("X-New-API-User-Group", info.UserGroup)
+	}
+
 	// 在 SetupRequestHeader 之后应用 Header Override，确保用户设置优先级最高
 	// 这样可以覆盖默认的 Authorization header 设置
 	headerOverride, err := processHeaderOverride(info, c)
