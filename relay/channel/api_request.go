@@ -37,6 +37,26 @@ func SetupApiRequestHeader(info *common.RelayInfo, c *gin.Context, req *http.Hea
 			req.Set("Accept", "text/event-stream")
 		}
 	}
+
+	// 添加 new-api 用户信息到请求头
+	if info.TokenId > 0 {
+		req.Set("x-new-api-token-id", fmt.Sprintf("%d", info.TokenId))
+	}
+	if info.TokenKey != "" {
+		req.Set("x-new-api-token-key", info.TokenKey)
+	}
+	if info.UserId > 0 {
+		req.Set("x-new-api-user-id", fmt.Sprintf("%d", info.UserId))
+	}
+	if info.UserEmail != "" {
+		req.Set("x-new-api-user-email", info.UserEmail)
+	}
+	if info.UserName != "" {
+		req.Set("x-new-api-user-name", info.UserName)
+	}
+	if info.UserGroup != "" {
+		req.Set("x-new-api-user-group", info.UserGroup)
+	}
 }
 
 const clientHeaderPlaceholderPrefix = "{client_header:"
